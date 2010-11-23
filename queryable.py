@@ -39,6 +39,18 @@ def main():
 
         return [A(True, '1'), A(True, '2'), A(False, '3'),
                 A(True, '4'), A(True, '5'), A(False, '6')]
+    
+    @queryable
+    def test3():
+        class A:
+            def __init__(self, a, b):
+                self.a = a
+                self.b = b
+        def mkfun(ret):
+            return lambda: ret
+        return iter((A(mkfun(True),  '1'), A(mkfun(True),  '2'),
+                     A(mkfun(False), '3'), A(mkfun(True),  '4'),
+                     A(mkfun(True),  '5'), A(mkfun(False), '6')))
 
     print 'Running tests ..'
 
@@ -48,6 +60,8 @@ def main():
                                    {'a': False, 'b': '6'}]
     assert '123456' == ''.join(map(lambda x:x['b'], test1()))
     assert '123456' == ''.join(map(lambda x:x.b, test2()))
+    assert '1245' == ''.join(map(lambda x:x.b, test3(a=True)))
+    assert '123456' == ''.join(map(lambda x:x.b, test3()))
 
     print 'All tests ok'
 
