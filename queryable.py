@@ -6,17 +6,16 @@ def queryable(func):
     def new_func(*args, **kwargs):
         # The functions must return an iterable
         rows = iter(func(*args))
-        assert hasattr(rows, '__iter__')
         for row in rows:
-            # Loop through the elements and filter out elements that doesn't
+            # Loop through the elements and filter out the ones that doesn't
             # match this particular query.
             for key, value in kwargs.iteritems():
                 # Supporting both __getitem__ and __getattr__.
                 try:
                     attr = getattr(row, key)
                 except AttributeError:
-                    attr = row.__getitem__(key)
-                if callable(attr):
+                    attr = row[key]
+                if hasattr(attr, '__call__'):
                     attr = attr()
                 if attr != value:
                     break
@@ -45,7 +44,8 @@ def main():
 
     assert '1245' == ''.join(map(lambda x:x['b'], test1(a=True)))
     assert '1245' == ''.join(map(lambda x:x.b, test2(a=True)))
-    assert [{'a': False, 'b': '3'}, {'a': False, 'b': '6'}] == list(test1(a=False))
+    assert list(test1(a=False))== [{'a': False, 'b': '3'}, \
+                                   {'a': False, 'b': '6'}]
     assert '123456' == ''.join(map(lambda x:x['b'], test1()))
     assert '123456' == ''.join(map(lambda x:x.b, test2()))
 
