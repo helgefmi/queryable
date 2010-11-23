@@ -6,7 +6,7 @@ def queryable(func):
     def new_func(*args, **kwargs):
         # The functions must return an iterable
         rows = iter(func(*args))
-        assert hasattr(rows, '__next__')
+        assert hasattr(rows, '__iter__')
         for row in rows:
             # Loop through the elements and filter out elements that doesn't
             # match this particular query.
