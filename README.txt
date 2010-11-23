@@ -1,5 +1,5 @@
 == Description ==
-Filters the result from a function that returns an iterable.
+A decorator that filters the result from a function that returns an iterable. 
 
 == Example ==
 @queryable
@@ -11,18 +11,18 @@ males = get_persons(gender='Male')
 newborn = get_persons(age=0)
 
 == TODO ==
-At some point, I want this to offer more functionality than this, and be more
-like the way django queries the database.
+Implement a similar API to Django's QuerySet.filter()
 
-!=: get_persons(age__not=0)
+Examples:
+get_persons(age__not=0)
+get_persons(hobbies__in=('Music', 'Horses'))
+get_persons(age__lt=6), get_persons(age__gte=18)
+get_persons(grades__english__lte='B')
 
-< and >: get_persons(age__lt=6), get_persons(age__gte=18)
-
-querying children: get_persons(grades__english__lte='B')
-person = {
-    ...,
-    'grades': {
-        'english': 'A',
-        ...
-    }
-}
+Things I might want to implement:
+- not
+- in
+- lt, gt, lte, gte
+- contains, icontains
+- regex
+- child field lookups
